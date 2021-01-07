@@ -1,0 +1,27 @@
+{
+  "name": "ImageManipulationAPI",
+  "version": "1.0.0",
+  "description": "A Node JS application that exposes APIs that transform uploaded images (crop, rotate, resize) and allow for download post-transformation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Benez11/ImageManipulationAPI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Benez11/ImageManipulationAPI/issues"
+  },
+  "homepage": "https://github.com/Benez11/ImageManipulationAPI#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express-fileupload": "^1.2.0",
+    "express-joi-validation": "^5.0.0",
+    "jimp": "^0.16.1",
+    "joi": "^17.3.0"
+  }
+}
