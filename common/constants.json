@@ -1,0 +1,15 @@
+{
+  "PORTS": {
+    "MAIN_SERVER": 5000,
+    "SOCKET-IO": 8000
+  },
+  "FILES": {
+    "MAX_SIZE": {
+      "VALUE": 2,
+      "UNIT": "MB"
+    }
+  },
+  "REQUEST_MONITOR": {
+    "LOOP_INTERVAL": 10000
+  }
+}
