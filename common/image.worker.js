@@ -1,19 +1,59 @@
 const { parentPort, workerData } = require("worker_threads");
+
+parentPort.on("message", (param) => {
+  if (param && param.killCmd) return process.exit(0);
+  else if (param) return transformQueue.push(param);
+  else
+    console.error(
+      "Parent has sent a message signal that has no valid 'param' argument attached. Further investigation needed."
+    );
+});
+
 const Jimp = require("jimp");
+
+const {
+  constants: {
+    DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },
+  },
+} = require("../common/index.js");
 
 const extractKeyValuePairs = (str) => {
   let pairObj = {};
-  str
-    .split(";")
-    .forEach((pair) => (pairObj[pair.split("=")[0]] = pair.split("=")[1]));
+  str.split(";").forEach((pair) => {
+    pairObj[pair.split("=")[0]] = pair.split("=")[1];
+  });
   return pairObj;
 };
 
-parentPort.on("message", (param) => {
-  Jimp.read(`temp\\${param.imageObj.tempName}`, (err, img) => {
-    if (err) throw err;
+const transformQueue = [];
 
-    let { crop, resize, rotate, scale } = param.req.body;
+const startExecuting = () => {
+  if (transformQueue.length > 0) {
+    executeTransformCMD(transformQueue.splice(0, 1));
+  } else console.info("Completed all transform requests in the queue.");
+};
+
+const executeTransformCMD = (param) => {
+  let readPath = `${UPLOADED_IMAGE_DIR}\\${param.imageObj.tempName}`;
+
+  Jimp.read(readPath, (err, img) => {
+    if (err) {
+      startExecuting();
+      return parentPort.postMessage({
+        tag: "transformation-update",
+        data: {
+          status: false,
+          body: {
+            message: "An error has occurred",
+            parsedParameters: param,
+            oldImgPath: readPath,
+            error: err,
+          },
+        },
+      });
+    }
+
+    let { crop, resize, rotate, scale } = param.requestBody;
     if (crop) {
       let cropParams = extractKeyValuePairs(crop);
       img.crop(
@@ -36,16 +76,23 @@ parentPort.on("message", (param) => {
       img.scale(scaleParams.f || 1);
     }
 
-    img.write(`transformed\\${param.imageObj.id}.${img.getExtension()}`, () => {
+    let writePath = `${TRANSFORMED_IMAGE_DIR}\\${
+      param.imageObj.id
+    }.${img.getExtension()}`;
+
+    img.write(writePath, () => {
+      startExecuting();
       parentPort.postMessage({
-        tag: "completed-transformation",
+        tag: "transformation-update",
         data: {
           status: true,
           body: {
             id: param.imageObj.id,
+            oldImg: readPath,
+            newImg: writePath,
           },
         },
       });
     }); // save
   });
-});
+};

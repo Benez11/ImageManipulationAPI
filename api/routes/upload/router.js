@@ -8,7 +8,7 @@ const { all, create, read, delete: del } = require("./controllers/index.js");
 
 router.post("/", create); //create an upload
 
-router.route("/:shipmentId");
+router.route("/:uploadId");
 // .get(read) //find an upload
 // .delete(del); //delete an upload
 

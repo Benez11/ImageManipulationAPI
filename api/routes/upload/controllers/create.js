@@ -3,26 +3,44 @@ const validator = require("express-joi-validation").createValidator({});
 
 const {
   codeGenerator,
-  imageHandler: { addImage, imageIDs },
+  imageHandler: { addImage, imageIDs, findImage },
+  workerHandler: { startImageWorker, messageImgWorker },
 } = require("../../../../common/index");
 
-const { Worker } = require("worker_threads");
-const worker = new Worker(
-  process.env.globalRootDir + "/common/image.worker.js",
-  {
-    workerData: { __dirname },
-  }
-);
-worker.on("message", ({ tag, data }) => {});
-worker.on("error", (err) => {
-  console.error("An error has occurred. Error details = ", err);
+const transformationSuccessCb = ({ body }) => {
+  findImage(body.id, {
+    execUponFind: (imageObj) => {
+      imageObj.transformed = 1;
+      imageObj.oldImg = body.oldImg;
+      imageObj.newImg = body.newImg;
+    },
+    execUponNotFound: () =>
+      console.log(
+        "This image is not found in the image DB. Further inspection needed."
+      ),
+  });
+};
+const transformationFailureCb = (data) => {
+  findImage(data.body.id, {
+    execUponFind: (imageObj) => {
+      imageObj.transformed = -1;
+      console.error("\nA transform request has failed. Details: ", data);
+    },
+    execUponNotFound: () =>
+      console.log(
+        "This image is not found in the image DB. Further inspection needed."
+      ),
+  });
+};
+startImageWorker(({ tag, data }) => {
+  if (tag === "transformation-update" && data.status)
+    transformationSuccessCb(data);
+  else if (tag === "transformation-update") transformationFailureCb(data);
+  else
+    console.error(
+      "Worker has sent a message with an unregistered tag. Further inspection needed."
+    );
 });
-worker.on("exit", (code) => {
-  if (code !== 0) {
-    console.info({ exitCode: code });
-  }
-});
-worker.postMessage("getMeThePiValue");
 
 const expectedSchema = Joi.object({
   scale: Joi.string(),
@@ -47,14 +65,18 @@ module.exports = [
           pastList: imageIDs,
         });
 
-        const splitTempFilePath = req.files.image.tempFilePath.split("\\");
+        const split = req.files.image.tempFilePath.split("\\");
+        let tempName = split[split.length - 1];
 
-        addImage(
-          _id,
-          req.id,
-          splitTempFilePath[splitTempFilePath.length - 1],
-          req.files.image
-        );
+        addImage(_id, req.id, tempName, req.files.image);
+
+        messageImgWorker({
+          requestBody: req.body,
+          imageObj: {
+            tempName,
+            id: _id,
+          },
+        });
 
         res.json({
           status: true,

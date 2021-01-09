@@ -1,5 +1,6 @@
 const fs = require("fs");
 let imageDB = require("./image.db.json");
+const constants = require("./constants.json");
 
 const imageIDs = [];
 imageDB.forEach((image, idx) => {
@@ -10,7 +11,7 @@ const findImage = function (id, { execUponFind, execUponNotFound }) {
   let toBeReturned = { image: null, index: -1 };
   imageDB.every((imageObj, idx) => {
     if (imageObj.id === id) {
-      typeof execUponFind === "function" ? execUponFind(imageObj) : "";
+      typeof execUponFind === "function" ? execUponFind(imageObj, idx) : "";
       toBeReturned = { image: imageObj, index: idx };
       return false;
     } else return true;
@@ -22,19 +23,20 @@ const findImage = function (id, { execUponFind, execUponNotFound }) {
 
 const addImage = function (id, reqId, tempName, fileObj) {
   imageIDs.push(id);
-  imageDB.push({ id, reqId, tempName, fileObj, transformed: false });
-  saveDBToDisk();
-  return true;
+  const imageObj = { id, reqId, tempName, fileObj, transformed: 0 };
+  imageDB.push(imageObj);
+  //   saveDBToDisk();
+  return imageObj;
 };
 
 const removeImage = function (id, { execUponRemoved, execUponNotFound }) {
   let ret = false;
   findImage(id, {
-    execUponFind: (imageObj) => {
-      imageDB.splice(imageObj.index, 1);
-      execUponRemoved(imageObj.image);
-      ret = true;
-      saveDBToDisk();
+    execUponFind: (imageObj, idx) => {
+      imageDB.splice(idx, 1);
+      execUponRemoved(imageObj);
+      ret = imageObj;
+      //   saveDBToDisk();
     },
     execUponNotFound: () => {
       console.error("Image NOT found");
@@ -54,11 +56,15 @@ const saveDBToDisk = function () {
   });
 };
 
+const saveInterval = setInterval(
+  saveDBToDisk,
+  constants.IMAGE_HANDLER.SAVE_INTERVAL
+);
+
 module.exports = {
   findImage,
   addImage,
   removeImage,
-  saveDBToDisk,
   imageIDs,
   imageDB,
 };

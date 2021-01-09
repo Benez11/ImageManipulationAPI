@@ -11,5 +11,12 @@
   },
   "REQUEST_MONITOR": {
     "LOOP_INTERVAL": 10000
+  },
+  "DIRS": {
+    "UPLOADED_IMAGE_DIR": "temp",
+    "TRANSFORMED_IMAGE_DIR": "transformed"
+  },
+  "IMAGE_HANDLER": {
+    "SAVE_INTERVAL": 10000
   }
 }
