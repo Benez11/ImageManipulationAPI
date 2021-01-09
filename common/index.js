@@ -5,5 +5,5 @@ module.exports = {
   codeGenerator: require("./code.generator.js"),
   imageHandler: require("./image.handler.js"),
   workerHandler: require("./worker.handler.js"),
-  notificationHandler: require("./notification.handler.js"),
+  // notificationHandler: require("./notification.handler.js"),
 };

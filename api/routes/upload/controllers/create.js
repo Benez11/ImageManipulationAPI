@@ -33,9 +33,11 @@ const transformationFailureCb = (data) => {
   });
 };
 startImageWorker(({ tag, data }) => {
+  console.log("PARENT: New messaage from child. Param:", { tag, data });
   if (tag === "transformation-update" && data.status)
     transformationSuccessCb(data);
   else if (tag === "transformation-update") transformationFailureCb(data);
+  else if (tag === "init") "";
   else
     console.error(
       "Worker has sent a message with an unregistered tag. Further inspection needed."

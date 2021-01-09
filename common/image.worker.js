@@ -1,9 +1,14 @@
 const { parentPort, workerData } = require("worker_threads");
 
 parentPort.on("message", (param) => {
+  console.log("CHILD: New message from parent. Param:", param);
   if (param && param.killCmd) return process.exit(0);
-  else if (param) return transformQueue.push(param);
-  else
+  else if (param && param.ping)
+    return parentPort.postMessage({ tag: "init", pong: true });
+  else if (param) {
+    transformQueue.push(param);
+    return startExecuting();
+  } else
     console.error(
       "Parent has sent a message signal that has no valid 'param' argument attached. Further investigation needed."
     );
@@ -20,7 +25,7 @@ const {
 const extractKeyValuePairs = (str) => {
   let pairObj = {};
   str.split(";").forEach((pair) => {
-    pairObj[pair.split("=")[0]] = pair.split("=")[1];
+    pairObj[pair.split("=")[0]] = Number(pair.split("=")[1]);
   });
   return pairObj;
 };
@@ -29,14 +34,17 @@ const transformQueue = [];
 
 const startExecuting = () => {
   if (transformQueue.length > 0) {
-    executeTransformCMD(transformQueue.splice(0, 1));
+    executeTransformCMD(transformQueue.splice(0, 1)[0]);
   } else console.info("Completed all transform requests in the queue.");
 };
 
 const executeTransformCMD = (param) => {
+  console.log({ param, imageObj: param.imageObj });
+
   let readPath = `${UPLOADED_IMAGE_DIR}\\${param.imageObj.tempName}`;
 
   Jimp.read(readPath, (err, img) => {
+    console.log("Viewing details", img);
     if (err) {
       startExecuting();
       return parentPort.postMessage({

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const hash = require("object-hash");
 let imageDB = require("./image.db.json");
 const constants = require("./constants.json");
 
@@ -47,17 +48,24 @@ const removeImage = function (id, { execUponRemoved, execUponNotFound }) {
   return ret;
 };
 
+let lastDBHash = hash(imageDB);
+
 const saveDBToDisk = function () {
-  const imageDBToString = JSON.stringify(imageDB);
-  //   console.log("GIVEN ORDER TO SAVE:", { imageDB, imageDBToString });
-  fs.writeFile("common/image.db.json", imageDBToString, function (err) {
-    if (err) console.error(err);
-    console.log("Written to image DB successfully!");
-  });
+  let currentHash = hash(imageDB);
+  //   console.log({ currentHash, lastDBHash });
+  if (currentHash !== lastDBHash) {
+    lastDBHash = currentHash;
+    const imageDBToString = JSON.stringify(imageDB);
+    //   console.log("GIVEN ORDER TO SAVE:", { imageDB, imageDBToString });
+    fs.writeFile("common/image.db.json", imageDBToString, function (err) {
+      if (err) console.error(err);
+      console.log("Written to image DB successfully!");
+    });
+  }
 };
 
 const saveInterval = setInterval(
-  saveDBToDisk,
+  () => saveDBToDisk(),
   constants.IMAGE_HANDLER.SAVE_INTERVAL
 );
 

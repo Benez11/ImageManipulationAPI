@@ -45,6 +45,7 @@ app.use(
 );
 
 app.use("/api", require("./api/api.router.js"));
+app.use("/upload", require("./api/routes/index").upload.router);
 
 app.listen(constants.PORTS.MAIN_SERVER, () => {
   console.log(`Main server is running on port: ${constants.PORTS.MAIN_SERVER}`);

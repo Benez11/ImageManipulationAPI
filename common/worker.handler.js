@@ -13,8 +13,12 @@ const startImageWorker = (messageHandler) => {
   );
   worker.on(
     "message",
-    typeof messageHandler === "function" ? messageHandler : console.log
+    typeof messageHandler === "function"
+      ? (param) => messageHandler(param)
+      : (param) =>
+          console.log("PARENT: New message from child. Param:", { ...param })
   );
+  worker.postMessage({ tag: "init", ping: true });
   worker.on("error", (err) => {
     console.error("An error has occurred. Error details = ", err);
   });
