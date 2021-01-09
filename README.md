@@ -17,16 +17,16 @@ Perform these steps using your CLI tool:
 ## API Endpoints:
 The application exposes the APIs:
 
-Endpoint: *"/upload"*
-
+### 1. URL: *"/upload"*
 Method: POST
-
 Additional Data Parsed Into Request "Body"
-
 Acceptable Data:
 - "image" This would contain the file data
 - "crop" e.g `{ crop: "x=2;y=4;w=3;h=10" }`
 // x - horizontal distance from origin, y - vertical distance from origin, w - the width of new image, h - the height of new image
-- "scale" e.g `{ scale: "f=1.5" }` // f - scale factor
-- "resize" e.g `{ resize: "w=3;h=10" }` // w - the width of new image, h - the height of new image
-- "rotate" e.g `{ rotate: "d=90" }` // d - degrees
+- "scale" e.g `{ scale: "f=1.5" }`
+// f - scale factor
+- "resize" e.g `{ resize: "w=3;h=10" }`
+// w - the width of new image, h - the height of new image
+- "rotate" e.g `{ rotate: "d=90" }`
+// d - degrees
