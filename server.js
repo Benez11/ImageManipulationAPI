@@ -1,3 +1,5 @@
+process.env.globalRootDir = __dirname;
+
 const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");

@@ -1,32 +1,47 @@
+const constants = require("./constants.json");
+const imageHandler = require("./image.handler.js");
+
 class NotificationManager {
-  CONSTANTS = {
-    port: require("./constants.json")["PORTS"]["SOCKET-IO"],
-  };
-  socketHandler = require("socket.io")(this.CONSTANTS.port, {
+  socketHandler = require("socket.io")(constants.PORTS["SOCKET-IO"], {
     origins: "*:*",
     path: "/socket-io",
   });
   socketPool = {};
-  userPool = {};
+  clientPool = {};
 
   constructor() {
     this.socketHandler.on("connection", (socket) => {
       this.addSocket(socket);
-      console.log("a user connected");
+      console.log("a client connected");
 
       socket.on("associate-client", ({ requestId, uploadId }) => {
-        this.addUser({
-          uploadId: user.email,
-          socketId: socket.id,
-        });
-        socket.emit("associate-user-reply", {
-          status: true,
-          body: { message: "User Associated" },
+        imageHandler.findImage(uploadId, {
+          execUponFind: (imageObj) => {
+            if (imageObj.reqId === requestId) {
+              this.addclient({
+                uploadId,
+                socketId: socket.id,
+              });
+              socket.emit("associate-client-reply", {
+                status: true,
+                body: { message: "Client Associated" },
+              });
+            }
+          },
+          execUponNotFound: () => {
+            socket.emit("associate-client-reply", {
+              status: false,
+              body: {
+                message:
+                  "Client Not Associated. No entry with your parsed uploadId exists",
+              },
+            });
+          },
         });
       });
 
       socket.on("disconnect", () => {
-        console.log("user disconnected");
+        console.log("client disconnected");
         this.removeSocket(socket);
       });
     });
@@ -40,25 +55,25 @@ class NotificationManager {
     return delete this.socketPool[socket.id];
   }
 
-  addUser({ userEmail, socketId }) {
-    if (Array.isArray(this.userPool[userEmail])) {
-      this.userPool[userEmail].push(socketId);
+  addClient({ uploadId, socketId }) {
+    if (Array.isArray(this.clientPool[uploadId])) {
+      this.clientPool[uploadId].push(socketId);
     } else {
-      this.userPool[userEmail] = [socketId];
+      this.clientPool[uploadId] = [socketId];
     }
-    return this.userPool[userEmail];
+    return this.clientPool[uploadId];
   }
 
-  removeUser({ userEmail }) {
-    return delete this.userPool[userEmail];
+  removeClient({ uploadId }) {
+    return delete this.clientPool[uploadId];
   }
 
-  getUserSockets({ userEmail }) {
-    return this.userPool[userEmail];
+  getClientSockets({ uploadId }) {
+    return this.clientPool[uploadId];
   }
 
-  notifyUser({ userEmail, tag, message }) {
-    let socketIdArray = this.getUserSockets({ userEmail });
+  notifyClient({ uploadId, tag, message }) {
+    let socketIdArray = this.getClientSockets({ uploadId });
     if (socketIdArray) {
       this.emitToSockets({ socketIdArray, tag, message });
       return true;

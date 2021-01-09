@@ -6,6 +6,24 @@ const {
   imageHandler: { addImage, imageIDs },
 } = require("../../../../common/index");
 
+const { Worker } = require("worker_threads");
+const worker = new Worker(
+  process.env.globalRootDir + "/common/image.worker.js",
+  {
+    workerData: { __dirname },
+  }
+);
+worker.on("message", ({ tag, data }) => {});
+worker.on("error", (err) => {
+  console.error("An error has occurred. Error details = ", err);
+});
+worker.on("exit", (code) => {
+  if (code !== 0) {
+    console.info({ exitCode: code });
+  }
+});
+worker.postMessage("getMeThePiValue");
+
 const expectedSchema = Joi.object({
   scale: Joi.string(),
   crop: Joi.string(),
