@@ -18,8 +18,11 @@ Perform these steps using your CLI tool:
 The application exposes the APIs:
 
 ### 1. URL: `"/upload"`
+
 Method: `POST`
+
 Acceptable Data (Request `Body`):
+
 + **image:** This would contain the file data
 + **crop:** e.g `{ crop: "x=2;y=4;w=3;h=10" }`
 
