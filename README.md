@@ -22,23 +22,27 @@ Method: `POST`
 Acceptable Data (Request `Body`):
 + **image:** This would contain the file data
 + **crop:** e.g `{ crop: "x=2;y=4;w=3;h=10" }`
-x - horizontal distance from origin,
-y - vertical distance from origin,
-w - the width of new image,
-h - the height of new image
+
+    x - horizontal distance from origin,
+    y - vertical distance from origin,
+    w - the width of new image,
+    h - the height of new image
+    
 + **scale:** e.g `{ scale: "f=1.5" }`
-f - scale factor
+
+    f - scale factor
+    
 + **resize:** e.g `{ resize: "w=3;h=10" }`
-w - the width of new image,
-h - the height of new image
+    w - the width of new image,
+    h - the height of new image
 + **rotate:** e.g `{ rotate: "d=90" }`
-d - degrees
+    d - degrees
 + **order:** e.g `{ order: "sc;re;ro;cr" }`
-sc - scale
-re - resize
-ro - rotate
-cr - crop
-//default order: "re;ro;sc;cr" meaning the worker should first 'resize', then 'rotate', then 'scale' and lastly 'crop' the parsed image.
+    sc - scale
+    re - resize
+    ro - rotate
+    cr - crop
+    //default order: "re;ro;sc;cr" meaning the worker should first 'resize', then 'rotate', then 'scale' and lastly 'crop' the parsed image.
 
 *Example:*
 ```javascript
