@@ -46,7 +46,7 @@ const gen = ({ blocks = [], joiner = [""], pastList = [] }) => {
         genetateCode(len, domain) + (joiner[index] ? joiner[index] : "");
     }
   );
-  console.log({ generated });
+  // console.log({ generated });
   if (pastList) {
     let foundInPast = pastList.find((code) => code === generated);
     if (foundInPast) return gen({ blocks, joiner, pastList });

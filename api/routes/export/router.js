@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 
-const { create } = require("./controllers/index.js");
+const { read } = require("./controllers/index.js");
 
-router.post("/", create); //create an upload
+router.get("/:uploadId", read); //export an upload
 
 module.exports = router;

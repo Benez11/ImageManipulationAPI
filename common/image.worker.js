@@ -1,4 +1,12 @@
 const { parentPort, workerData } = require("worker_threads");
+const Jimp = require("jimp");
+const fs = require("fs");
+const imgToPDF = require("image-to-pdf");
+const {
+  constants: {
+    DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },
+  },
+} = require("../common/index.js");
 
 parentPort.on("message", (param) => {
   console.log("CHILD: New message from parent. Param:", param);
@@ -14,18 +22,11 @@ parentPort.on("message", (param) => {
     );
 });
 
-const Jimp = require("jimp");
-
-const {
-  constants: {
-    DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },
-  },
-} = require("../common/index.js");
-
 const extractKeyValuePairs = (str) => {
   let pairObj = {};
   str.split(";").forEach((pair) => {
-    pairObj[pair.split("=")[0]] = Number(pair.split("=")[1]);
+    let keyVal = pair.split("=");
+    if (keyVal[0] && keyVal[1]) pairObj[keyVal[0]] = Number(pair.split("=")[1]);
   });
   return pairObj;
 };
@@ -44,7 +45,7 @@ const executeTransformCMD = (param) => {
   let readPath = `${UPLOADED_IMAGE_DIR}\\${param.imageObj.tempName}`;
 
   Jimp.read(readPath, (err, img) => {
-    console.log("Viewing details", img);
+    // console.log("Viewing details", img);
     if (err) {
       startExecuting();
       return parentPort.postMessage({
@@ -61,32 +62,57 @@ const executeTransformCMD = (param) => {
       });
     }
 
-    let { crop, resize, rotate, scale } = param.requestBody;
-    if (crop) {
-      let cropParams = extractKeyValuePairs(crop);
-      img.crop(
-        cropParams.x || 0,
-        cropParams.y || 0,
-        cropParams.w || 0,
-        cropParams.h || 0
-      );
-    }
-    if (resize) {
-      let resizeParams = extractKeyValuePairs(resize);
-      img.resize(resizeParams.w || Jimp.AUTO, resizeParams.h || Jimp.AUTO);
-    }
-    if (rotate) {
-      let rotateParams = extractKeyValuePairs(rotate);
-      img.rotate(rotateParams.d || 0);
-    }
-    if (scale) {
-      let scaleParams = extractKeyValuePairs(scale);
-      img.scale(scaleParams.f || 1);
+    let { crop, resize, rotate, scale, order } = param.requestBody;
+
+    const doResize = () => {
+      if (resize) {
+        let resizeParams = extractKeyValuePairs(resize);
+        img.resize(resizeParams.w || Jimp.AUTO, resizeParams.h || Jimp.AUTO);
+      }
+    };
+    const doRotate = () => {
+      if (rotate) {
+        let rotateParams = extractKeyValuePairs(rotate);
+        img.rotate(rotateParams.d || 0);
+      }
+    };
+    const doScale = () => {
+      if (scale) {
+        let scaleParams = extractKeyValuePairs(scale);
+        img.scale(scaleParams.f || 1);
+      }
+    };
+    const doCrop = () => {
+      if (crop) {
+        let cropParams = extractKeyValuePairs(crop);
+        img.crop(
+          cropParams.x || 0,
+          cropParams.y || 0,
+          cropParams.w || 0,
+          cropParams.h || 0
+        );
+      }
+    };
+    if (order) {
+      order.split(";").forEach((task) => {
+        if (task === "re") doResize();
+        else if (task === "ro") doRotate();
+        else if (task === "sc") doScale();
+        else if (task === "cr") doCrop();
+        else
+          console.log(
+            "ExecuteTransformCMD :: Unknown task listed for execution:",
+            task
+          );
+      });
+    } else {
+      doResize();
+      doRotate();
+      doScale();
+      doCrop();
     }
 
-    let writePath = `${TRANSFORMED_IMAGE_DIR}\\${
-      param.imageObj.id
-    }.${img.getExtension()}`;
+    let writePath = `${TRANSFORMED_IMAGE_DIR}\\${param.imageObj.id}.jpg`;
 
     img.write(writePath, () => {
       startExecuting();

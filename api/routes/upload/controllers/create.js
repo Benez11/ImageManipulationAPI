@@ -45,16 +45,18 @@ startImageWorker(({ tag, data }) => {
 });
 
 const expectedSchema = Joi.object({
-  scale: Joi.string(),
-  crop: Joi.string(),
-  resize: Joi.string(),
-  rotate: Joi.string(),
+  scale: Joi.string().lowercase(),
+  crop: Joi.string().lowercase(),
+  resize: Joi.string().lowercase(),
+  rotate: Joi.string().lowercase(),
+  order: Joi.string().lowercase(),
+  // exportAs: Joi.string(),
 });
 
 module.exports = [
   validator.body(expectedSchema),
   function (req, res) {
-    if (Object.keys(req.files).length >= 1 && req.files.image) {
+    if (req.files && Object.keys(req.files).length >= 1 && req.files.image) {
       if (req.files.image.mimetype.split("/")[0] === "image") {
         let _id = codeGenerator({
           blocks: [
@@ -63,7 +65,6 @@ module.exports = [
             { len: 4, toUse: "A0" },
             { len: 4, toUse: "0" },
           ],
-          joiner: ["-", "-", "-"],
           pastList: imageIDs,
         });
 
@@ -85,10 +86,10 @@ module.exports = [
           body: {
             message: "Image uploaded successfully.",
             _id,
-            request: {
-              id: req.id,
-              file: req.files,
-            },
+            // request: {
+            //   id: req.id,
+            //   file: req.files,
+            // },
           },
         });
       } else {

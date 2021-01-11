@@ -24,6 +24,7 @@
     "express-fileupload": "^1.2.0",
     "express-joi-validation": "^5.0.0",
     "express-request-id": "^1.4.1",
+    "image-to-pdf": "^1.0.0",
     "jimp": "^0.16.1",
     "joi": "^17.3.0",
     "object-hash": "^2.1.1",
