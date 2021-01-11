@@ -60,29 +60,29 @@ Acceptable Data (Request `Body`):
     
     //default order: "re;ro;sc;cr" meaning the worker should first 'resize', then 'rotate', then 'scale' and lastly 'crop' the parsed image.
 
-*Example:*
-```javascript
-axios({
-    method: 'post',
-    url: '/upload',
-    data: {
-        image: imageFile,
-        crop: "x=2;y=4;w=3;h=10",
-        scale: "f=1.5",
-        resize: "w=3;h=10",
-        rotate: "d=90",
-        order: "sc;ro;re;cr"
-    }
-})
- .then(function (response) {
-    //handle success
-    console.log(response);
- })
- .catch(function (response) {
-    //handle error
-    console.log(response);
- });
-```
+    *Example:*
+    ```javascript
+    axios({
+        method: 'post',
+        url: '/upload',
+        data: {
+            image: imageFile,
+            crop: "x=2;y=4;w=3;h=10",
+            scale: "f=1.5",
+            resize: "w=3;h=10",
+            rotate: "d=90",
+            order: "sc;ro;re;cr"
+        }
+    })
+     .then(function (response) {
+        //handle success
+        console.log(response);
+     })
+     .catch(function (response) {
+        //handle error
+        console.log(response);
+     });
+    ```
 
 ### 2. URL: `"/export"`
 
@@ -92,25 +92,25 @@ Acceptable Data (Request `Query`):
 
 + **to:** e.g `?to=jpg`  // jpg, png, pdf or PDf (case insensitive)
 
-JPG - exports a JPEG image,
+    JPG - exports a JPEG image,
 
-PNG - exports a PNG image,
+    PNG - exports a PNG image,
 
-PDF - exports a PDF document,
+    PDF - exports a PDF document,
 
-*Example:*
-```javascript
- // For the "/export" endpoint
-axios({
-    method: 'get',
-    url: '/export?to=PDF'
-})
- .then(function (response) {
-    //handle success
-    console.log(response);
- })
- .catch(function (response) {
-    //handle error
-    console.log(response);
- });
-```
+    *Example:*
+    ```javascript
+     // For the "/export" endpoint
+    axios({
+        method: 'get',
+        url: '/export?to=PDF'
+    })
+     .then(function (response) {
+        //handle success
+        console.log(response);
+     })
+     .catch(function (response) {
+        //handle error
+        console.log(response);
+     });
+    ```
