@@ -8,12 +8,13 @@ const {
 } = require("../../../../common/index.js");
 
 const expectedSchema = Joi.object({
-  to: Joi.string().valid("JPG", "PNG", "PDF").insensitive().required(),
+  to: Joi.string().insensitive().lowercase().required(),
 });
 
 module.exports = [
   validator.query(expectedSchema),
   function (req, res) {
+    console.info({ Query: req.query });
     let ids = {
       uploadId: req.params.uploadId,
       requestId: req.id,
@@ -22,7 +23,7 @@ module.exports = [
       execUponFind: (imageObj, idx) => {
         if (imageObj.transformed === 1) {
           const { to } = req.query;
-          if (to === "JPG") {
+          if (to === "jpg") {
             Jimp.read(imageObj.newImg, (err, img) => {
               if (err) {
                 console.error(
@@ -58,7 +59,7 @@ module.exports = [
                   })
                 );
             });
-          } else if (to === "PNG") {
+          } else if (to === "png") {
             Jimp.read(imageObj.newImg, (err, img) => {
               if (err) {
                 console.error(
@@ -94,7 +95,7 @@ module.exports = [
                   })
                 );
             });
-          } else if (to === "PDF") {
+          } else if (to === "pdf") {
             res.set(
               "Content-disposition",
               `attachment; filename=exported -- ${new Date().toISOString()}.pdf`
