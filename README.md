@@ -83,3 +83,34 @@ axios({
     console.log(response);
  });
 ```
+
+### 2. URL: `"/export"`
+
+Method: `GET`
+
+Acceptable Data (Request `Query`):
+
++ **to:** e.g `?to=jpg`  // jpg, png, pdf or PDf (case insensitive)
+
+JPG - exports a JPEG image,
+
+PNG - exports a PNG image,
+
+PDF - exports a PDF document,
+
+*Example:*
+```javascript
+ // For the "/export" endpoint
+axios({
+    method: 'get',
+    url: '/export?to=PDF'
+})
+ .then(function (response) {
+    //handle success
+    console.log(response);
+ })
+ .catch(function (response) {
+    //handle error
+    console.log(response);
+ });
+```
