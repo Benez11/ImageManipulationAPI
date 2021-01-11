@@ -39,6 +39,7 @@ Acceptable Data (Request `Body`):
     f - scale factor
     
 + **resize:** e.g `{ resize: "w=3;h=10" }`
+
     w - the width of new image,
     
     h - the height of new image
