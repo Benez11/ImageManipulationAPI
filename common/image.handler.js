@@ -1,7 +1,7 @@
 const fs = require("fs");
 const hash = require("object-hash");
 let imageDB = require("./image.db.json");
-const constants = require("./constants.json");
+const constants = process.env.imageManipAPI_constants;
 
 const imageIDs = [];
 imageDB.forEach((image, idx) => {

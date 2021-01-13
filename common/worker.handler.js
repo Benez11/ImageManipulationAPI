@@ -8,7 +8,7 @@ const startImageWorker = (messageHandler) => {
   const worker = new Worker(
     process.env.globalRootDir + "/common/image.worker.js",
     {
-      workerData: { __dirname: process.env.globalRootDir },
+      workerData: process.env.imageManipAPI_constants,
     }
   );
   worker.on(

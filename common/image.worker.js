@@ -1,11 +1,9 @@
-const { parentPort } = require("worker_threads");
+const { parentPort, workerData } = require("worker_threads");
 const Jimp = require("jimp");
 
 const {
-  constants: {
-    DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },
-  },
-} = require("../common/index.js");
+  DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },
+} = workerData;
 
 parentPort.on("message", (param) => {
   console.log("CHILD: New message from parent. Param:", param);

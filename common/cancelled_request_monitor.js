@@ -1,5 +1,5 @@
 // ***Cancelled Request (CR)***
-const { REQUEST_MONITOR } = require("./constants.json");
+const { REQUEST_MONITOR } = process.env.imageManipAPI_constants;
 
 const CRs = [];
 

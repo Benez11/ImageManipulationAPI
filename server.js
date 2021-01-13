@@ -1,12 +1,14 @@
 process.env.globalRootDir = __dirname;
+process.env.imageManipAPI_constants = require("./common/constants.json");
+
+const constants = process.env.imageManipAPI_constants;
 
 const express = require("express");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const addRequestId = require("express-request-id")();
 
-var {
-  constants,
+let {
   fileSizeHandler: { calcBytesBasedOnUnit },
   cancelledRequestMonitor: { addCR },
 } = require("./common/index.js");
