@@ -1,5 +1,5 @@
 {
-  "name": "ImageManipulationAPI",
+  "name": "image-transform-server",
   "version": "0.0.1",
   "description": "A Node JS application that exposes APIs that transform uploaded images (crop, rotate, resize) and allow for download post-transformation",
   "main": "index.js",
@@ -15,6 +15,7 @@
     "image",
     "manipulation",
     "transform",
+    "transformation",
     "backend",
     "export",
     "jpg",
