@@ -56,7 +56,7 @@ const expectedSchema = Joi.object({
 module.exports = [
   validator.body(expectedSchema),
   function (req, res) {
-    if (req.files && Object.keys(req.files).length >= 1 && req.files.image) {
+    if (req.files && req.files.image) {
       if (req.files.image.mimetype.split("/")[0] === "image") {
         let _id = codeGenerator({
           blocks: [

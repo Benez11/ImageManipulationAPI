@@ -54,12 +54,12 @@ const saveDBToDisk = function () {
   let currentHash = hash(imageDB);
   //   console.log({ currentHash, lastDBHash });
   if (currentHash !== lastDBHash) {
-    lastDBHash = currentHash;
     const imageDBToString = JSON.stringify(imageDB);
     //   console.log("GIVEN ORDER TO SAVE:", { imageDB, imageDBToString });
     fs.writeFile("common/image.db.json", imageDBToString, function (err) {
       if (err) console.error(err);
       console.log("Written to image DB successfully!");
+      lastDBHash = currentHash;
     });
   }
 };

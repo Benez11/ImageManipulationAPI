@@ -1,7 +1,6 @@
-const { parentPort, workerData } = require("worker_threads");
+const { parentPort } = require("worker_threads");
 const Jimp = require("jimp");
-const fs = require("fs");
-const imgToPDF = require("image-to-pdf");
+
 const {
   constants: {
     DIRS: { UPLOADED_IMAGE_DIR, TRANSFORMED_IMAGE_DIR },

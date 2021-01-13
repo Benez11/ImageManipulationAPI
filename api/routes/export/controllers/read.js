@@ -112,6 +112,15 @@ module.exports = [
               },
             });
           }
+        } else if (imageObj.transformed === -1) {
+          res.status(500).json({
+            status: false,
+            body: {
+              message:
+                "This image was NOT successfully transformed. An error occurred during the process. Re-upload the image and attempt this extraction again and if problem persists, kindly contact support for further assistance.",
+              ...ids,
+            },
+          });
         } else {
           res.json({
             status: false,

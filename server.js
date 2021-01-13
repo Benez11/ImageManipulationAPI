@@ -35,7 +35,7 @@ app.use(
         res.status(413).json({
           status: false,
           body: {
-            message: "File size limit has been reached. Operation cancelled.",
+            message: `File size limit (${constants.FILES.MAX_SIZE.VALUE} ${constants.FILES.MAX_SIZE.UNIT}) has been reached. Operation cancelled.`,
           },
         });
       else

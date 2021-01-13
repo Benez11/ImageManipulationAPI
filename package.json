@@ -11,8 +11,20 @@
     "type": "git",
     "url": "git+https://github.com/Benez11/ImageManipulationAPI.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "image",
+    "manipulation",
+    "transform",
+    "backend",
+    "export",
+    "jpg",
+    "png",
+    "pdf",
+    "upload",
+    "js",
+    "javascript"
+  ],
+  "author": " Ebenezer Chiazor",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Benez11/ImageManipulationAPI/issues"
