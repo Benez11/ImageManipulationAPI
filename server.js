@@ -1,7 +1,4 @@
 process.env.globalRootDir = __dirname;
-process.env.imageManipAPI_constants = require("./common/constants.json");
-
-const constants = process.env.imageManipAPI_constants;
 
 const express = require("express");
 const cors = require("cors");
@@ -9,6 +6,7 @@ const fileUpload = require("express-fileupload");
 const addRequestId = require("express-request-id")();
 
 let {
+  constants,
   fileSizeHandler: { calcBytesBasedOnUnit },
   cancelledRequestMonitor: { addCR },
 } = require("./common/index.js");
@@ -50,6 +48,12 @@ app.use(
 app.use("/upload", require("./api/routes/index").upload.router);
 app.use("/export", require("./api/routes/index").export.router);
 
-app.listen(constants.PORTS.MAIN_SERVER, () => {
-  console.log(`Main server is running on port: ${constants.PORTS.MAIN_SERVER}`);
-});
+const startServer = () => {
+  app.listen(constants.PORTS.MAIN_SERVER, () => {
+    console.log(
+      `Main server is running on port: ${constants.PORTS.MAIN_SERVER}`
+    );
+  });
+};
+
+module.exports = startServer;

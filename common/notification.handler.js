@@ -1,4 +1,4 @@
-const constants = process.env.imageManipAPI_constants;
+const constants = require("./constants.json");
 const imageHandler = require("./image.handler.js");
 
 class NotificationManager {

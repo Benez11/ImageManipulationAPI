@@ -8,7 +8,7 @@ const startImageWorker = (messageHandler) => {
   const worker = new Worker(
     process.env.globalRootDir + "/common/image.worker.js",
     {
-      workerData: process.env.imageManipAPI_constants,
+      workerData: require("./constants.json"),
     }
   );
   worker.on(
