@@ -62,6 +62,7 @@ Acceptable Data (Request `Body`):
 
     *Example:*
     ```javascript
+    // Request
     axios({
         method: 'post',
         url: '/upload',
@@ -82,6 +83,15 @@ Acceptable Data (Request `Body`):
         //handle error
         console.log(response);
      });
+     
+    // Response
+    {
+        "status": true,
+        "body": {
+            "message": "Image uploaded successfully.",
+            "_id": <uploadId> //string
+        }
+    }
     ```
 
 ### 2. URL: `"/export"`
@@ -90,7 +100,7 @@ Method: `GET`
 
 Acceptable Data (Request `Query`):
 
-+ **to:** e.g `?to=jpg`  // jpg, png, pdf or PDf (case insensitive)
++ **to:** e.g `/export/<uploadId>?to=jpg`  // jpg, png, pdf or PDf (case insensitive)
 
     JPG - exports a JPEG image,
 
@@ -100,10 +110,10 @@ Acceptable Data (Request `Query`):
 
     *Example:*
     ```javascript
-     // For the "/export" endpoint
+    // Request
     axios({
         method: 'get',
-        url: '/export?to=PDF'
+        url: '/export/<uploadId>?to=PDF'
     })
      .then(function (response) {
         //handle success
@@ -113,4 +123,7 @@ Acceptable Data (Request `Query`):
         //handle error
         console.log(response);
      });
+    
+    //Response
+    Requested file is downloaded as specified file type
     ```
