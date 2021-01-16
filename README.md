@@ -85,13 +85,13 @@ Acceptable Data (Request `Body`):
      });
      
     // Response
-    {
-        "status": true,
-        "body": {
-            "message": "Image uploaded successfully.",
-            "_id": <uploadId> //string
-        }
-    }
+    // {
+    //    "status": true,
+    //    "body": {
+    //        "message": "Image uploaded successfully.",
+    //        "_id": <uploadId> //string
+    //    }
+    // }
     ```
 
 ### 2. URL: `"/export"`
@@ -124,6 +124,6 @@ Acceptable Data (Request `Query`):
         console.log(response);
      });
     
-    //Response
-    Requested file is downloaded as specified file type
+    // Response
+    // => Requested file is downloaded as specified file type
     ```
