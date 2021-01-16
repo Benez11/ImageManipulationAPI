@@ -1,20 +1,24 @@
 # ImageManipulationAPI
+
 A Node JS application that exposes APIs that transform uploaded images (crop, rotate, resize) and allow for their download post-transformation
 
 # Pre-requisites:
+
 You need to have these installed:
+
 - Git
 - Node JS
 
-
 ## Get started by:
+
 Perform these steps using your CLI tool:
+
 1. Clone this repository (usually with `git clone <REPO_URL>`)
 2. Install required packages with `npm install`
 3. Start the application with `npm start`
 
-
 ## API endpoints:
+
 The application exposes the APIs:
 
 ### 1. URL: `"/upload"`
@@ -23,76 +27,77 @@ Method: `POST`
 
 Acceptable Data (Request `Body`):
 
-+ **image:** This would contain the file data
-+ **crop:** e.g `{ crop: "x=2;y=4;w=3;h=10" }`
+- **image:** This would contain the file data
+- **crop:** e.g `{ crop: "x=2;y=4;w=3;h=10" }`
 
-    x - horizontal distance from origin,
-    
-    y - vertical distance from origin,
-    
-    w - the width of new image,
-    
-    h - the height of new image
-    
-+ **scale:** e.g `{ scale: "f=1.5" }`
+  x - horizontal distance from origin,
 
-    f - scale factor
-    
-+ **resize:** e.g `{ resize: "w=3;h=10" }`
+  y - vertical distance from origin,
 
-    w - the width of new image,
-    
-    h - the height of new image
-    
-+ **rotate:** e.g `{ rotate: "d=90" }`
+  w - the width of new image,
 
-    d - degrees
-    
-+ **order:** e.g `{ order: "sc;re;ro;cr" }`
+  h - the height of new image
 
-    sc - scale
-    
-    re - resize
-    
-    ro - rotate
-    
-    cr - crop
-    
-    //default order: "re;ro;sc;cr" meaning the worker should first 'resize', then 'rotate', then 'scale' and lastly 'crop' the parsed image.
+- **scale:** e.g `{ scale: "f=1.5" }`
 
-    *Example:*
-    ```javascript
-    // Request
-    axios({
-        method: 'post',
-        url: '/upload',
-        data: {
-            image: imageFile,
-            crop: "x=2;y=4;w=3;h=10",
-            scale: "f=1.5",
-            resize: "w=3;h=10",
-            rotate: "d=90",
-            order: "sc;ro;re;cr"
-        }
+  f - scale factor
+
+- **resize:** e.g `{ resize: "w=3;h=10" }`
+
+  w - the width of new image,
+
+  h - the height of new image
+
+- **rotate:** e.g `{ rotate: "d=90" }`
+
+  d - degrees
+
+- **order:** e.g `{ order: "sc;re;ro;cr" }`
+
+  sc - scale
+
+  re - resize
+
+  ro - rotate
+
+  cr - crop
+
+  //default order: "re;ro;sc;cr" meaning the worker should first 'resize', then 'rotate', then 'scale' and lastly 'crop' the parsed image.
+
+  _Example:_
+
+  ```javascript
+  // Request
+  axios({
+    method: "post",
+    url: "/upload",
+    data: {
+      image: imageFile,
+      crop: "x=2;y=4;w=3;h=10",
+      scale: "f=1.5",
+      resize: "w=3;h=10",
+      rotate: "d=90",
+      order: "sc;ro;re;cr",
+    },
+  })
+    .then(function (response) {
+      //handle success
+      console.log(response);
     })
-     .then(function (response) {
-        //handle success
-        console.log(response);
-     })
-     .catch(function (response) {
-        //handle error
-        console.log(response);
-     });
-     
-    // Response
-    // {
-    //    "status": true,
-    //    "body": {
-    //        "message": "Image uploaded successfully.",
-    //        "_id": <uploadId> //string
-    //    }
-    // }
-    ```
+    .catch(function (response) {
+      //handle error
+      console.log(response);
+    });
+
+  // Response
+  // {
+  //    "status": true,
+  //    "body": {
+  //        "message": "Image uploaded successfully.",
+  //        "_id": <uploadId> //string
+  //    }
+  // }
+  ```
 
 ### 2. URL: `"/export"`
 
@@ -100,30 +105,31 @@ Method: `GET`
 
 Acceptable Data (Request `Query`):
 
-+ **to:** e.g `/export/<uploadId>?to=jpg`  // jpg, png, pdf or PDf (case insensitive)
+- **to:** e.g `/export/<uploadId>?to=jpg` // jpg, png, pdf or PDf (case insensitive)
 
-    JPG - exports a JPEG image,
+  JPG - exports a JPEG image,
 
-    PNG - exports a PNG image,
+  PNG - exports a PNG image,
 
-    PDF - exports a PDF document,
+  PDF - exports a PDF document,
 
-    *Example:*
-    ```javascript
-    // Request
-    axios({
-        method: 'get',
-        url: '/export/<uploadId>?to=PDF'
+  _Example:_
+
+  ```javascript
+  // Request
+  axios({
+    method: "get",
+    url: "/export/<uploadId>?to=PDF",
+  })
+    .then(function (response) {
+      //handle success
+      console.log(response);
     })
-     .then(function (response) {
-        //handle success
-        console.log(response);
-     })
-     .catch(function (response) {
-        //handle error
-        console.log(response);
-     });
-    
-    // Response
-    // => Requested file is downloaded as specified file type
-    ```
+    .catch(function (response) {
+      //handle error
+      console.log(response);
+    });
+
+  // Response
+  // => Requested file is downloaded as specified file type
+  ```
